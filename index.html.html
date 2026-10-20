@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Form Pesan CV</title>
+<!--
+  CARA PAKAI (pemilik):
+  1. Edit blok CONFIG di bagian <script> paling bawah: nomor WhatsApp, nama usaha, rekening, harga.
+  2. Taruh file ini di hosting statis gratis (mis. GitHub Pages / Netlify Drop / Cloudflare Pages) lalu bagikan link-nya.
+  3. Klien mengisi -> tombol WhatsApp membuka chat berisi pesanan yang sudah rapi.
+  4. Pesan itu langsung bisa ditempel ke bagian [DATA KLIEN] di prompt-elaborasi-ai.md.
+-->
+<style>
+:root{--ac:#1f3a5f;--bg:#f1f5f9;--bd:#cbd5e1}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;background:var(--bg);color:#0f172a;line-height:1.45}
+header{background:var(--ac);color:#fff;padding:20px 16px;text-align:center}
+header h1{margin:0;font-size:20px}
+header p{margin:6px 0 0;font-size:14px;opacity:.92}
+.wrap{max-width:640px;margin:0 auto;padding:12px 14px 80px}
+.steps{display:flex;gap:6px;margin:6px 0 4px}
+.steps i{flex:1;height:6px;border-radius:3px;background:#cbd5e1}
+.steps i.on{background:var(--ac)}
+.card{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:14px;margin:12px 0}
+h2{font-size:17px;margin:0 0 4px}
+.hint{font-size:13px;color:#475569;margin:0 0 8px}
+label{display:block;font-weight:600;font-size:14px;margin:12px 0 4px}
+label small{font-weight:400;color:#64748b}
+input,select,textarea{width:100%;padding:11px;font-size:16px;border:1px solid var(--bd);border-radius:8px;background:#fff;font-family:inherit;color:inherit}
+input:disabled,select:disabled{background:#f1f5f9;color:#64748b}
+textarea{min-height:84px;resize:vertical}
+.btn{display:block;width:100%;padding:14px;border:0;border-radius:10px;font-size:16px;font-weight:700;background:var(--ac);color:#fff;cursor:pointer;margin-top:12px}
+.btn.alt{background:#e2e8f0;color:#0f172a}
+.btn.wa{background:#16a34a}
+.btn.sm{width:auto;display:inline-block;padding:8px 12px;font-size:14px;margin:6px 6px 0 0}
+.nav{display:grid;grid-template-columns:1fr 2fr;gap:10px}
+.path{display:grid;gap:10px;margin-top:8px}
+.path button{text-align:left;padding:16px;border:2px solid var(--bd);border-radius:12px;background:#fff;font-size:16px;cursor:pointer;font-family:inherit}
+.path button b{display:block;font-size:17px;margin-bottom:2px}
+.path button span{font-size:13px;color:#475569}
+.path button:hover{border-color:var(--ac);background:#eff6ff}
+.price{background:#ecfdf5;border:1px solid #6ee7b7;border-radius:10px;padding:12px;margin-top:14px;font-size:14px}
+.price .r{display:flex;justify-content:space-between;gap:8px;margin:2px 0}
+.price .tot{font-size:22px;font-weight:800;color:#065f46;margin-top:6px}
+.rep{border:1px dashed var(--bd);border-radius:10px;padding:10px;margin:10px 0;background:#f8fafc}
+.chips{margin-top:6px}
+.chips button{border:1px solid var(--bd);background:#fff;border-radius:999px;padding:6px 10px;font-size:13px;margin:0 6px 6px 0;cursor:pointer}
+table{width:100%;border-collapse:collapse;font-size:14px}
+td{padding:6px 4px;border-bottom:1px solid #e2e8f0;vertical-align:top}
+td:last-child{text-align:right;white-space:nowrap;font-weight:700}
+pre{white-space:pre-wrap;word-break:break-word;background:#0f172a;color:#e2e8f0;padding:12px;border-radius:8px;font-size:12.5px;max-height:300px;overflow:auto;margin:8px 0 0}
+details{margin-top:8px;font-size:14px}
+summary{cursor:pointer;font-weight:600}
+ol,ul{padding-left:20px;margin:6px 0}
+.hide{display:none!important}
+.tip{background:#fffbeb;border:1px solid #fcd34d;border-radius:10px;padding:10px;font-size:13.5px;margin-top:10px}
+</style>
+</head>
+<body>
+<header><h1 id="brand">Pesan CV</h1><p>Isi singkat, kami yang merapikan. Tidak perlu paham membuat CV.</p></header>
+<div class="wrap">
+<div class="steps" id="steps"><i></i><i></i><i></i><i></i></div>
+
+<!-- ================= LANGKAH 0: pilih jalur ================= -->
+<section id="s0">
+  <div class="card">
+    <h2>Halo! Kamu sudah punya CV?</h2>
+    <p class="hint">Pilih yang paling sesuai. Tidak ada jawaban yang salah.</p>
+    <div class="path">
+      <button type="button" data-path="A"><b>📄 Saya sudah punya CV</b><span>Cukup kirim file CV lamamu lewat WhatsApp (PDF, Word, foto, atau screenshot juga boleh). Form hanya ±2 menit.</span></button>
+      <button type="button" data-path="B"><b>✍️ Saya belum pernah membuat CV</b><span>Kami pandu dengan pertanyaan sederhana. Tulis seadanya — nanti kami yang merapikan.</span></button>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Lebih nyaman chat atau voice note?</h2>
+    <p class="hint">Boleh banget. Langsung chat saja, kamu akan dipandu.</p>
+    <button type="button" class="btn alt" id="btnChat">Chat lewat WhatsApp</button>
+    <details><summary> (ketuk ini) Hal yang bisa kamu ceritakan lewat chat / voice note</summary>
+      <ol>
+        <li>Nama lengkap, kota tinggal, nomor HP &amp; email</li>
+        <li>Pekerjaan yang ingin dilamar (kalau ada lowongan, kirim screenshot-nya)</li>
+        <li>Pendidikan: nama sekolah/kampus, jurusan, tahun masuk &amp; lulus</li>
+        <li>Pengalaman: kerja, magang, PKL, jualan online, bantu usaha keluarga, relawan — apa saja yang kamu kerjakan</li>
+        <li>Kegiatan organisasi / ekstrakurikuler / lomba</li>
+        <li>Hal yang bisa kamu lakukan (komputer, menyetir, bahasa, dll.)</li>
+        <li>Sertifikat atau pelatihan yang pernah diikuti</li>
+      </ol>
+    </details>
+  </div>
+  <div class="card"><h2>Daftar harga</h2><div id="priceTable"></div></div>
+</section>
+
+<!-- ================= LANGKAH 1: pesanan ================= -->
+<section id="s1" class="hide">
+  <div class="card">
+    <h2>Data pesanan</h2>
+    <label>Nama lengkap *</label><input id="f_name" data-k="name" autocomplete="name">
+    <label>Email <small>(ditulis di CV)</small></label><input id="f_email" data-k="email" type="email" autocomplete="email">
+    <label>Kota / domisili <small>(mis. Malang, Jawa Timur)</small></label><input id="f_city" data-k="city">
+    <label>Link yang ingin dicantumkan <small>(LinkedIn, portofolio, Instagram usaha — satu per baris, boleh kosong)</small></label>
+    <textarea id="f_links" data-k="links" style="min-height:64px"></textarea>
+  </div>
+  <div class="card">
+    <h2>Pekerjaan yang dituju</h2>
+    <label>Posisi yang ingin dilamar *</label><input id="f_target" data-k="target" placeholder="mis. Staf Administrasi, Kasir, Operator Produksi">
+    <label>Lowongan yang dilamar <small>(tempel teks atau link — boleh kosong, tapi CV jadi lebih tepat sasaran kalau ada)</small></label>
+    <textarea id="f_jd" data-k="jd"></textarea>
+  </div>
+  <div class="card">
+    <h2>Kategori harga</h2>
+    <p class="hint">Jawab 3 pertanyaan ini, kategori harga terpilih otomatis.</p>
+    <label>Pendidikan terakhir</label><select id="f_edu" data-k="edu"></select>
+    <label>Pengalaman kerja</label><select id="f_exp" data-k="exp"></select>
+    <label>Ingin pindah ke bidang kerja yang berbeda dari sebelumnya?</label>
+    <select id="f_switch" data-k="switch"><option value="no">Tidak</option><option value="yes">Ya, ingin pindah bidang</option></select>
+    <label>Kategori harga <small>(otomatis — bisa diubah jika kurang sesuai)</small></label>
+    <select id="f_tier" data-k="tier"></select>
+  </div>
+  <div class="card">
+    <h2>Jenis CV &amp; paket</h2>
+    <label>Paket</label><select id="f_pkg" data-k="pkg"></select>
+    <label>Format CV</label>
+    <select id="f_tpl" data-k="tpl"><option value="ats">ATS — rapi &amp; aman dibaca sistem rekrutmen (cocok untuk portal lowongan / email)</option><option value="kreatif">Kreatif — tampilan menarik, bisa pakai foto</option></select>
+    <label>Bahasa CV</label>
+    <select id="f_lang" data-k="lang"><option value="id">Indonesia</option><option value="en">English</option></select>
+    <div class="price" id="priceBox"></div>
+  </div>
+  <div class="nav"><button type="button" class="btn alt" data-go="0">Kembali</button><button type="button" class="btn" id="next1">Lanjut</button></div>
+</section>
+
+<!-- ================= LANGKAH 2: data ================= -->
+<section id="s2" class="hide">
+  <!-- Jalur A: sudah punya CV -->
+  <div id="pathA">
+    <div class="card">
+      <h2>Kirim CV lamamu</h2>
+      <p class="hint">Setelah form ini selesai, kamu akan diarahkan ke WhatsApp. Di sana tinggal <b>lampirkan file CV lama</b> (PDF / Word / foto / screenshot).</p>
+      <label>Ada yang ingin diubah atau ditambah? <small>(boleh kosong)</small></label>
+      <textarea id="f_changes" data-k="changes" placeholder="mis. ganti target ke posisi admin, tambahkan sertifikat Excel terbaru"></textarea>
+      <label>Pengalaman / sertifikat baru yang belum ada di CV lama <small>(boleh kosong)</small></label>
+      <textarea id="f_newstuff" data-k="newstuff"></textarea>
+      <label>Atau tempel isi CV lamamu di sini <small>(opsional, kalau lebih mudah daripada kirim file)</small></label>
+      <textarea id="f_oldcv" data-k="oldcv" style="min-height:130px"></textarea>
+    </div>
+  </div>
+
+  <!-- Jalur B: belum punya CV -->
+  <div id="pathB">
+    <div class="tip">💡 Tenang, tulis seadanya. Belum pernah kerja? Tidak apa-apa — isi PKL, kegiatan sekolah/kampus, jualan online, bantu usaha keluarga, atau relawan. Semua itu pengalaman.</div>
+    <div class="card"><h2>Pendidikan</h2><p class="hint">Dari yang terakhir.</p><div id="rep_edu"></div></div>
+    <div class="card"><h2>Pengalaman</h2><p class="hint">Kerja, magang, PKL, freelance, jualan, usaha keluarga, relawan. Lewati kalau memang belum ada.</p><div id="rep_exp"></div></div>
+    <div class="card"><h2>Organisasi / kegiatan / lomba</h2><div id="rep_org"></div></div>
+    <div class="card">
+      <h2>Hal yang bisa kamu lakukan</h2>
+      <p class="hint">Ketuk yang sesuai, atau tulis sendiri.</p>
+      <div class="chips" id="chips"></div>
+      <textarea id="f_skills" data-k="skills" placeholder="mis. Microsoft Excel, melayani pelanggan, menyetir motor"></textarea>
+    </div>
+    <div class="card">
+      <h2>Tambahan</h2>
+      <label>Sertifikat / pelatihan / kursus <small>(nama — penyelenggara — tahun)</small></label><textarea id="f_certs" data-k="certs" style="min-height:64px"></textarea>
+      <label>Penghargaan / prestasi</label><textarea id="f_awards" data-k="awards" style="min-height:64px"></textarea>
+      <label>Bahasa yang dikuasai <small>(mis. Inggris — dasar)</small></label><textarea id="f_langs" data-k="langs" style="min-height:64px"></textarea>
+      <label>Ceritakan dirimu singkat <small>(2–3 kalimat: kamu orangnya seperti apa dan kenapa cocok untuk pekerjaan ini)</small></label><textarea id="f_about" data-k="about"></textarea>
+    </div>
+  </div>
+  <div class="nav"><button type="button" class="btn alt" data-go="1">Kembali</button><button type="button" class="btn" data-go="3">Lanjut</button></div>
+</section>
+
+<!-- ================= LANGKAH 3: kirim ================= -->
+<section id="s3" class="hide">
+  <div class="card">
+    <h2>Cek &amp; kirim</h2>
+    <div class="price" id="priceBox2"></div>
+    <details><summary>(ketuk ini) Lihat ringkasan pesananmu</summary><pre id="preview"></pre></details>
+    <button type="button" class="btn wa" id="btnWA">Kirim lewat WhatsApp (Pastikan salin teks pesanan ya, Kak)</button>
+    <button type="button" class="btn alt" id="btnCopy">Salin teks pesanan</button>
+    <button type="button" class="btn alt" id="btnTxt">Unduh sebagai file .txt</button>
+    <div class="tip" id="afterTips"></div>
+  </div>
+  <div class="nav"><button type="button" class="btn alt" data-go="2">Kembali</button><button type="button" class="btn alt" id="btnReset">Mulai ulang</button></div>
+</section>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ====================== CONFIG — EDIT DI SINI ====================== */
+var CONFIG={
+  brand:"Jasa CV — [LIBERAVERA]",
+  wa:"62895629549735",                      // nomor WhatsApp-mu, format 62..., tanpa + atau spasi
+  payment:"Cara pembayaran: [salin teks pesanan sebelum kirim chat di WA ya, kak.].",
+  note:"Estimasi pengerjaan & revisi: [Maksimal 3 Jam tentu dengan revisi 2x].",
+  tiers:[
+    {id:"sd",    label:"Lulusan SD / SMP / SMA / SMK",        price:25000},
+    {id:"fresh", label:"Fresh Graduate (D3 / S1 / S2)",        price:30000},
+    {id:"switch",label:"Career Switcher",                      price:40000},
+    {id:"pro",   label:"Profesional 1–5 tahun",                price:45000},
+    {id:"exec",  label:"Eksekutif / Manajerial (>5 tahun)",    price:65000}
+  ],
+  packages:[
+    {id:"std",     label:"Standar — 1 CV (pilih 1 format & 1 bahasa)",                    add:0},
+    {id:"dual",    label:"Single Format 2 Bahasa — 1 format dalam Indonesia + English",   add:15000},
+    {id:"complete",label:"Complete 2 Bahasa — ATS + Kreatif × Indonesia + English (4 CV)", add:25000}
+  ]
+};
+/* =================================================================== */
+
+var $=function(id){return document.getElementById(id)};
+var rp=function(n){return "Rp"+Number(n).toLocaleString("id-ID")};
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function has(v){return v!=null&&String(v).trim()!==""}
+
+var EDU=[["sd","SD"],["smp","SMP"],["sma","SMA / SMK / sederajat"],["d3","D3"],["s1","S1"],["s2","S2"],["s3","S3"]];
+var EXP=[["none","Belum pernah bekerja"],["lt1","Kurang dari 1 tahun (magang / PKL / freelance)"],["1_5","1–5 tahun"],["gt5","Lebih dari 5 tahun"],["mgr","Pernah memimpin tim / level manajer"]];
+var CHIPS=["Microsoft Word","Microsoft Excel","PowerPoint","Canva","Komunikasi","Kerja tim","Melayani pelanggan","Kasir","Administrasi","Mengetik cepat","Media sosial","Menyetir mobil","Menyetir motor","Bahasa Inggris"];
+var REP={
+ edu:{title:"Pendidikan",max:3,f:[["school","Nama sekolah / kampus","t"],["major","Jurusan (kalau ada)","t"],["period","Tahun (mis. 2020–2024)","t"],["score","IPK / rata-rata nilai (boleh kosong)","t"],["extra","Prestasi atau kegiatan penting di sana (boleh kosong)","a"]]},
+ exp:{title:"Pengalaman",max:4,f:[["place","Tempat (perusahaan / toko / usaha / PKL / magang)","t"],["role","Posisi / peran kamu","t"],["period","Kapan (mis. Jan 2023 – Des 2023)","t"],["tasks","Apa saja yang kamu kerjakan? Tulis seadanya, nanti kami rapikan","a"],["result","Ada hasil atau angka? mis. melayani 50 pelanggan/hari (boleh kosong)","t"]]},
+ org:{title:"Kegiatan",max:3,f:[["place","Nama organisasi / kegiatan / lomba","t"],["role","Peran / jabatan","t"],["period","Kapan","t"],["tasks","Apa yang kamu kerjakan / capai?","a"]]}
+};
+
+var S=load()||{step:0,path:"",data:{},edu:[{}],exp:[{}],org:[]};
+var D=S.data;
+if(!D.edu)D.edu="sma"; if(!D.exp)D.exp="none"; if(!D.switch)D.switch="no";
+if(!D.pkg)D.pkg="std"; if(!D.tpl)D.tpl="ats"; if(!D.lang)D.lang="id";
+if(!D.tier)D.tier=detectTier(D);
+
+function save(){try{localStorage.setItem("cvintake_v1",JSON.stringify(S))}catch(e){}}
+function load(){try{return JSON.parse(localStorage.getItem("cvintake_v1"))}catch(e){return null}}
+
+function detectTier(d){
+ if(d.switch==="yes")return "switch";
+ if(d.exp==="mgr"||d.exp==="gt5")return "exec";
+ if(d.exp==="1_5")return "pro";
+ if(["sd","smp","sma"].indexOf(d.edu)>-1)return "sd";
+ return "fresh";
+}
+function suggestSeg(t,d){
+ if(t==="sd")return "sd_smk";
+ if(t==="switch")return "switcher";
+ if(t==="pro"||t==="exec")return "profesional";
+ return (d.edu==="s2"||d.edu==="s3")?"sarjana":"fresh";
+}
+function calc(){
+ var t=CONFIG.tiers.filter(function(x){return x.id===D.tier})[0]||CONFIG.tiers[1];
+ var p=CONFIG.packages.filter(function(x){return x.id===D.pkg})[0]||CONFIG.packages[0];
+ return {tier:t,pkg:p,total:t.price+p.add};
+}
+
+/* ---------- init UI ---------- */
+$("brand").textContent=CONFIG.brand;
+function opts(el,list,valKey,labKey){el.innerHTML=list.map(function(x){return '<option value="'+esc(x[valKey])+'">'+esc(x[labKey])+'</option>'}).join("")}
+$("f_edu").innerHTML=EDU.map(function(x){return '<option value="'+x[0]+'">'+x[1]+'</option>'}).join("");
+$("f_exp").innerHTML=EXP.map(function(x){return '<option value="'+x[0]+'">'+x[1]+'</option>'}).join("");
+$("f_tier").innerHTML=CONFIG.tiers.map(function(x){return '<option value="'+x.id+'">'+esc(x.label)+' — '+rp(x.price)+'</option>'}).join("");
+$("f_pkg").innerHTML=CONFIG.packages.map(function(x){return '<option value="'+x.id+'">'+esc(x.label)+(x.add?' (+'+rp(x.add)+')':'')+'</option>'}).join("");
+$("priceTable").innerHTML='<table>'+CONFIG.tiers.map(function(x){return '<tr><td>'+esc(x.label)+'</td><td>'+rp(x.price)+'</td></tr>'}).join("")+
+  '<tr><td colspan="2" style="font-weight:700;padding-top:12px;border:0">Tambahan paket</td></tr>'+
+  CONFIG.packages.filter(function(x){return x.add}).map(function(x){return '<tr><td>'+esc(x.label)+'</td><td>+'+rp(x.add)+'</td></tr>'}).join("")+'</table>';
+$("chips").innerHTML=CHIPS.map(function(c){return '<button type="button" data-chip="'+esc(c)+'">'+esc(c)+'</button>'}).join("");
+
+function restore(){
+ [].forEach.call(document.querySelectorAll("[data-k]"),function(el){var v=D[el.dataset.k];if(v!=null)el.value=v});
+ ["edu","exp","org"].forEach(renderRep);
+}
+
+/* ---------- repeater ---------- */
+function renderRep(k){
+ var def=REP[k],list=S[k],h="";
+ list.forEach(function(it,i){
+  h+='<div class="rep"><b>'+def.title+' #'+(i+1)+'</b>';
+  def.f.forEach(function(f){
+   h+='<label>'+f[1]+'</label>';
+   var attr='data-rep="'+k+'" data-i="'+i+'" data-f="'+f[0]+'"';
+   h+=f[2]==="a"?'<textarea '+attr+'>'+esc(it[f[0]]||"")+'</textarea>':'<input type="text" '+attr+' value="'+esc(it[f[0]]||"")+'">';
+  });
+  if(k!=="edu"||list.length>1)h+='<button type="button" class="btn alt sm" data-del="'+k+'" data-i="'+i+'">Hapus</button>';
+  h+='</div>';
+ });
+ if(list.length<def.max)h+='<button type="button" class="btn alt sm" data-add="'+k+'">+ Tambah '+def.title.toLowerCase()+'</button>';
+ $("rep_"+k).innerHTML=h;
+}
+
+/* ---------- harga ---------- */
+function updatePrice(){
+ var c=calc(),h='<div class="r"><span>'+esc(c.tier.label)+'</span><b>'+rp(c.tier.price)+'</b></div>';
+ if(c.pkg.add)h+='<div class="r"><span>'+esc(c.pkg.label)+'</span><b>+'+rp(c.pkg.add)+'</b></div>';
+ h+='<div class="tot">Total: '+rp(c.total)+'</div>';
+ $("priceBox").innerHTML=h;$("priceBox2").innerHTML=h;
+ $("f_tpl").disabled=D.pkg==="complete";
+ $("f_lang").disabled=D.pkg!=="std";
+}
+
+/* ---------- navigasi ---------- */
+function go(n){
+ S.step=n;
+ for(var i=0;i<4;i++)$("s"+i).classList.toggle("hide",i!==n);
+ [].forEach.call($("steps").children,function(b,i){b.classList.toggle("on",i<=n)});
+ $("pathA").classList.toggle("hide",S.path!=="A");
+ $("pathB").classList.toggle("hide",S.path!=="B");
+ if(n===3)buildSummary();
+ save();window.scrollTo(0,0);
+}
+
+/* ---------- teks pesanan (format sama dengan [DATA KLIEN] di prompt AI) ---------- */
+function line(l,v){return has(v)?l+": "+String(v).trim():""}
+function repText(k){
+ return S[k].filter(function(it){return Object.keys(it).some(function(f){return has(it[f])})}).map(function(it){
+  if(k==="edu"){
+   return "- "+[it.school,it.major].filter(has).join(" — ")+(has(it.period)?" | "+it.period:"")+(has(it.score)?"\n  Nilai/IPK: "+it.score:"")+(has(it.extra)?"\n  Prestasi/kegiatan: "+it.extra.trim().replace(/\n/g,"\n  "):"");
+  }
+  var t="- "+[it.role,it.place].filter(has).join(" @ ")+(has(it.period)?" | "+it.period:"");
+  if(has(it.tasks))t+="\n  Tugas: "+it.tasks.trim().replace(/\n/g,"\n  ");
+  if(has(it.result))t+="\n  Hasil: "+it.result;
+  return t;
+ }).join("\n");
+}
+function buildText(){
+ var c=calc(),L=[];
+ function add(x){if(x)L.push(x)}
+ var tplTxt=D.pkg==="complete"?"ATS + Kreatif":(D.tpl==="kreatif"?"Kreatif":"ATS");
+ var langTxt=D.pkg==="std"?(D.lang==="en"?"English":"Indonesia"):"Indonesia + English";
+ var n=D.pkg==="complete"?4:(D.pkg==="dual"?2:1);
+ add("=== PESANAN CV ===");
+ add(line("Nama",D.name));
+ add("Kategori harga: "+c.tier.label+" ("+rp(c.tier.price)+")");
+ add("Paket: "+c.pkg.label+(c.pkg.add?" (+"+rp(c.pkg.add)+")":""));
+ add("Jumlah CV: "+n);
+ add("Total budget: "+rp(c.total));
+ add("Template: "+tplTxt);
+ add("Bahasa: "+langTxt);
+ add("Saran segmen generator: "+suggestSeg(D.tier,D));
+ add("Jalur: "+(S.path==="A"?"Sudah punya CV (file dikirim lewat chat)":"Belum punya CV (diisi di form)"));
+ if(D.pkg!=="complete"&&D.tpl==="kreatif"||D.pkg==="complete")add("Foto: klien kirim lewat chat (untuk template Kreatif)");
+ add("");add("=== TARGET ===");
+ add(line("Posisi target",D.target));
+ if(has(D.jd))add("Lowongan/deskripsi:\n"+D.jd.trim());
+ add("");add("=== KONTAK ===");
+ add(line("Email",D.email));add(line("Domisili",D.city));
+ if(has(D.links))add("Link:\n"+D.links.trim().split("\n").filter(has).map(function(x){return "- "+x.trim()}).join("\n"));
+ add("");add("=== DATA ===");
+ if(S.path==="A"){
+  add("(CV lama dilampirkan di chat)");
+  if(has(D.changes))add("Perubahan yang diminta:\n"+D.changes.trim());
+  if(has(D.newstuff))add("Tambahan baru:\n"+D.newstuff.trim());
+  if(has(D.oldcv))add("Isi CV lama (ditempel klien):\n"+D.oldcv.trim());
+ }else{
+  var e=repText("edu"),x=repText("exp"),o=repText("org");
+  if(e)add("PENDIDIKAN:\n"+e);
+  if(x)add("PENGALAMAN:\n"+x);
+  if(o)add("ORGANISASI/KEGIATAN:\n"+o);
+  if(has(D.skills))add("KEAHLIAN: "+D.skills.trim());
+  if(has(D.certs))add("SERTIFIKAT/PELATIHAN:\n"+D.certs.trim());
+  if(has(D.awards))add("PENGHARGAAN:\n"+D.awards.trim());
+  if(has(D.langs))add("BAHASA:\n"+D.langs.trim());
+  if(has(D.about))add("TENTANG KLIEN:\n"+D.about.trim());
+ }
+ return L.join("\n");
+}
+function buildSummary(){
+ $("preview").textContent=buildText();
+ var t=[];
+ t.push("<b>Setelah WhatsApp terbuka:</b><ol>");
+ t.push("<li>Kirim pesan yang sudah terisi otomatis.</li>");
+ if(S.path==="A")t.push("<li><b>Lampirkan file CV lamamu</b> (PDF / Word / foto / screenshot).</li>");
+ if(D.tpl==="kreatif"||D.pkg==="complete")t.push("<li><b>Kirim 1 foto</b>: setengah badan, wajah jelas, latar polos, pakaian rapi (foto dari HP tidak masalah).</li>");
+ t.push("<li>Kalau ada lowongan yang dilamar, kirim screenshot-nya.</li>");
+ t.push("<li>"+esc(CONFIG.payment)+"</li></ol>");
+ t.push("<div>"+esc(CONFIG.note)+"</div>");
+ $("afterTips").innerHTML=t.join("");
+}
+function copyText(t){
+ if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(t).catch(function(){})}
+ else{var a=document.createElement("textarea");a.value=t;document.body.appendChild(a);a.select();try{document.execCommand("copy")}catch(e){}a.remove()}
+}
+function waUrl(msg){return "https://wa.me/"+CONFIG.wa+"?text="+encodeURIComponent(msg)}
+
+/* ---------- event ---------- */
+document.addEventListener("input",function(e){
+ var t=e.target;
+ if(t.dataset&&t.dataset.k){
+  var k=t.dataset.k;D[k]=t.value;
+  if(k==="edu"||k==="exp"||k==="switch"){D.tier=detectTier(D);$("f_tier").value=D.tier}
+  updatePrice();save();
+ }else if(t.dataset&&t.dataset.rep){
+  S[t.dataset.rep][+t.dataset.i][t.dataset.f]=t.value;save();
+ }
+});
+document.addEventListener("click",function(e){
+ var b=e.target.closest?e.target.closest("button"):null;if(!b)return;
+ if(b.dataset.path){S.path=b.dataset.path;go(1)}
+ else if(b.dataset.go!==undefined){go(+b.dataset.go)}
+ else if(b.dataset.add){var k=b.dataset.add;S[k].push({});renderRep(k);save()}
+ else if(b.dataset.del){var k2=b.dataset.del;S[k2].splice(+b.dataset.i,1);renderRep(k2);save()}
+ else if(b.dataset.chip){
+  var sk=$("f_skills"),cur=sk.value.trim(),c=b.dataset.chip;
+  if(cur.toLowerCase().indexOf(c.toLowerCase())===-1){sk.value=cur?cur+", "+c:c;D.skills=sk.value;save()}
+ }
+});
+$("next1").addEventListener("click",function(){
+ if(!has(D.name)||!has(D.target)){alert("Mohon isi Nama lengkap dan Posisi yang dilamar dulu ya.");return}
+ go(2);
+});
+$("btnChat").addEventListener("click",function(){
+ location.href=waUrl("Halo, saya mau pesan CV. Saya lebih nyaman cerita lewat chat / voice note, boleh dipandu?");
+});
+$("btnWA").addEventListener("click",function(){
+ var text=buildText();copyText(text);
+ var url=waUrl(text);
+ if(url.length>3800){
+  alert("Datamu cukup panjang, jadi sudah disalin otomatis. Setelah WhatsApp terbuka: kirim pesan pembuka, lalu TEMPEL (paste) datamu di chat.");
+  url=waUrl("Halo, saya "+(D.name||"")+" mau pesan CV. Data lengkap saya tempel di chat berikutnya ya.");
+ }
+ location.href=url;
+});
+$("btnCopy").addEventListener("click",function(){copyText(buildText());this.textContent="✔ Tersalin";var b=this;setTimeout(function(){b.textContent="Salin teks pesanan"},1800)});
+$("btnTxt").addEventListener("click",function(){
+ var blob=new Blob([buildText()],{type:"text/plain;charset=utf-8"}),a=document.createElement("a");
+ a.href=URL.createObjectURL(blob);a.download="pesanan-cv-"+(String(D.name||"klien").trim().replace(/\s+/g,"-").toLowerCase())+".txt";
+ document.body.appendChild(a);a.click();a.remove();
+});
+$("btnReset").addEventListener("click",function(){
+ if(!confirm("Hapus semua isian dan mulai dari awal?"))return;
+ try{localStorage.removeItem("cvintake_v1")}catch(e){}
+ location.reload();
+});
+
+restore();updatePrice();go(S.step||0);
+})();
+</script>
+</body>
+</html>
